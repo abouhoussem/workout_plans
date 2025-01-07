@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول إلى حسابك</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* نفس التنسيق السابق */
+    </style>
+    <script>
+        function validateLogin() {
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            var errorMessage = "";
+
+            // التحقق من صحة البريد الإلكتروني
+            if (!email.match(emailPattern)) {
+                errorMessage += "البريد الإلكتروني غير صحيح.\n";
+            }
+
+            // التحقق من أن كلمة المرور غير فارغة
+            if (password === "") {
+                errorMessage += "يرجى إدخال كلمة المرور.\n";
+            }
+
+            // عرض الرسالة في حال وجود أخطاء
+            if (errorMessage !== "") {
+                alert(errorMessage);
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>تسجيل الدخول إلى حسابك</h1>
+    </header>
+    <main>
+        <form onsubmit="return validateLogin()" action="/submit_login" method="POST">
+            <label for="email">البريد الإلكتروني:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="password">كلمة المرور:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">تسجيل الدخول</button>
+        </form>
+        <a href="forgot_password.html">نسيت كلمة المرور؟</a>
+    </main>
+</body>
+</html>
