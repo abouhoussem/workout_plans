@@ -6,8 +6,130 @@
     <title>انضم إلى تطبيق مخطط إنقاص الوزن</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* نفس التنسيق السابق */
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            direction: rtl;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: right;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #5a5a5a;
+        }
+
+        main {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        label {
+            font-size: 1.2rem;
+            color: #444;
+        }
+
+        input, select, button {
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        input[type="text"], input[type="email"], input[type="number"], input[type="password"] {
+            background-color: #fafafa;
+        }
+
+        select {
+            background-color: #fafafa;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        input:focus, select:focus, button:focus {
+            border: 1px solid #4CAF50;
+        }
+
+        /* إضافة تأثير عند المرور بالفورم */
+        input[type="text"]:hover, input[type="email"]:hover, input[type="number"]:hover, input[type="password"]:hover, select:hover {
+            border-color: #4CAF50;
+        }
     </style>
+</head>
+<body>
+    <header>
+        <h1>انضم إلى تطبيق مخطط إنقاص الوزن</h1>
+    </header>
+    <main>
+        <form onsubmit="return validateForm()" method="POST">
+            <label for="name">الاسم الكامل:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">البريد الإلكتروني:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">كلمة المرور:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirm_password">تأكيد كلمة المرور:</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+
+            <label for="age">العمر:</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="weight">الوزن الحالي (بالكيلو):</label>
+            <input type="number" id="weight" name="weight" required>
+
+            <label for="height">الطول (بالمتر):</label>
+            <input type="number" id="height" name="height" required step="0.01">
+
+            <label for="goal">الهدف:</label>
+            <select id="goal" name="goal">
+                <option value="lose_weight">إنقاص الوزن</option>
+                <option value="maintain_weight">الحفاظ على الوزن</option>
+                <option value="gain_weight">زيادة الوزن</option>
+            </select>
+
+            <button type="submit">تسجيل</button>
+        </form>
+    </main>
+
     <script>
         function validateForm() {
             var password = document.getElementById("password").value;
@@ -16,54 +138,37 @@
             var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
             var errorMessage = "";
 
-            // التحقق من تطابق كلمة المرور
             if (password !== confirmPassword) {
                 errorMessage += "كلمة المرور وتأكيد كلمة المرور غير متطابقين.\n";
             }
 
-            // التحقق من صحة البريد الإلكتروني
             if (!email.match(emailPattern)) {
                 errorMessage += "البريد الإلكتروني غير صحيح.\n";
             }
 
-            // عرض الرسالة في حال وجود أخطاء
             if (errorMessage !== "") {
                 alert(errorMessage);
                 return false;
             }
 
-            return true;
+            // إرسال البيانات إلى الخادم
+            submitForm();
+            return false;  // منع إرسال النموذج بشكل افتراضي
+        }
+
+        function submitForm() {
+            var formData = new FormData(document.querySelector('form'));
+            fetch('/submit_signup', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data); // إظهار رسالة من الخادم (تأكيد التسجيل)
+                window.location.href = "/"; // إعادة توجيه المستخدم إلى الصفحة الرئيسية
+            })
+            .catch(error => console.error('Error:', error));
         }
     </script>
-</head>
-<body>
-    <header>
-        <h1>انضم إلى تطبيق مخطط إنقاص الوزن</h1>
-    </header>
-    <main>
-        <form onsubmit="return validateForm()" action="/submit_signup" method="POST">
-            <label for="name">الاسم الكامل:</label>
-            <input type="text" id="name" name="name" required>
-            <label for="email">البريد الإلكتروني:</label>
-            <input type="email" id="email" name="email" required>
-            <label for="password">كلمة المرور:</label>
-            <input type="password" id="password" name="password" required>
-            <label for="confirm_password">تأكيد كلمة المرور:</label>
-            <input type="password" id="confirm_password" name="confirm_password" required>
-            <label for="age">العمر:</label>
-            <input type="number" id="age" name="age" required>
-            <label for="weight">الوزن الحالي (بالكيلو):</label>
-            <input type="number" id="weight" name="weight" required>
-            <label for="height">الطول (بالمتر):</label>
-            <input type="number" id="height" name="height" required step="0.01">
-            <label for="goal">الهدف:</label>
-            <select id="goal" name="goal">
-                <option value="lose_weight">إنقاص الوزن</option>
-                <option value="maintain_weight">الحفاظ على الوزن</option>
-                <option value="gain_weight">زيادة الوزن</option>
-            </select>
-            <button type="submit">تسجيل</button>
-        </form>
-    </main>
 </body>
 </html>
